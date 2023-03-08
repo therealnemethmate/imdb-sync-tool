@@ -4,9 +4,9 @@ import { logger, safeLoadJSON, sleep, writeJSON } from './utils.js';
 
 dotenv.config();
 
-const ratingsPath = process.env.IMDB_MT_RATINGS_PATH;
-const statePath = process.env.IMDB_MT_SYNC_STATE_PATH;
-const sleepMs = Number.parseInt(process.env.IMDB_MT_SLEEP_MS) ?? 2000;
+const ratingsPath = process.env.IMDB_ST_RATINGS_PATH;
+const statePath = process.env.IMDB_ST_SYNC_STATE_PATH;
+const sleepMs = Number.parseInt(process.env.IMDB_ST_SLEEP_MS) ?? 2000;
 
 const url = process.env.IMDB_GQL_API;
 const cookie = process.env.IMDB_COOKIE;
