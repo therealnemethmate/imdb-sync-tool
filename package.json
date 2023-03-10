@@ -3,11 +3,15 @@
   "type": "module",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js"
+    "start": "node main.js",
+    "lint": "eslint *.js"
   },
   "license": "MIT",
   "dependencies": {
     "dotenv": "^16.0.3",
     "node-fetch": "^3.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.35.0"
   }
 }

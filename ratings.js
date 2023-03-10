@@ -1,17 +1,18 @@
 import fetch from 'node-fetch';
+import { env } from 'process';
 import * as dotenv from 'dotenv';
 import { logger, safeLoadJSON, sleep, writeJSON } from './utils.js';
 
 dotenv.config();
 
-const ratingsPath = process.env.IMDB_ST_RATINGS_PATH;
-const statePath = process.env.IMDB_ST_SYNC_STATE_PATH;
-const sleepMs = Number.parseInt(process.env.IMDB_ST_SLEEP_MS) ?? 2000;
+const ratingsPath = env.IMDB_ST_RATINGS_PATH;
+const statePath = env.IMDB_ST_SYNC_STATE_PATH;
+const sleepMs = Number.parseInt(env.IMDB_ST_SLEEP_MS) ?? 2000;
 
-const url = process.env.IMDB_GQL_API;
-const cookie = process.env.IMDB_COOKIE;
-const amazonSessionId = process.env.IMDB_X_AMAZON_SESSIONID;
-const clientRid = process.env.IMDB_X_IMDB_CLIENT_RID;
+const url = env.IMDB_GQL_API;
+const cookie = env.IMDB_COOKIE;
+const amazonSessionId = env.IMDB_X_AMAZON_SESSIONID;
+const clientRid = env.IMDB_X_IMDB_CLIENT_RID;
 
 export async function sync() {
     let count = 0;
@@ -27,9 +28,9 @@ export async function sync() {
                 ++count;
                 continue;
             }
-            await rate(rating.imdbMovieId, rating.userRatingScore)
+            await rate(rating.imdbMovieId, rating.userRatingScore);
             state.ratings.idsDone.push(rating.imdbMovieId);
-            logger.info(`Progress: ${++count}/${ratings.length} is done.`)
+            logger.info(`Progress: ${++count}/${ratings.length} is done.`);
             await sleep(sleepMs);
         }
     } catch (error) {
@@ -53,40 +54,40 @@ async function rate(titleId, rating) {
                 __typename
             }
         }`,
-        operationName: "UpdateTitleRating",
+        operationName: 'UpdateTitleRating',
         variables: {
             rating,
             titleId,
         }
-    }
+    };
 
     const resp = await fetch(url, {
         headers: {
-            "accept": "application/graphql+json, application/json",
-            "accept-language": "hu-HU,hu;q=0.9,en-US;q=0.8,en;q=0.7",
-            "content-type": "application/json",
-            "sec-ch-ua": "\"Chromium\";v=\"110\", \"Not A(Brand\";v=\"24\", \"Google Chrome\";v=\"110\"",
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": "\"Windows\"",
-            "sec-fetch-dest": "empty",
-            "sec-fetch-mode": "cors",
-            "sec-fetch-site": "same-site",
-            "x-amzn-sessionid": amazonSessionId,
-            "x-imdb-client-name": "imdb-web-next",
-            "x-imdb-client-rid": clientRid,
-            "x-imdb-user-country": "HU",
-            "x-imdb-user-language": "hu-HU",
-            "x-imdb-weblab-treatment-overrides": "{\"IMDB_DESKTOP_SEARCH_ALGORITHM_UPDATES_577300\":\"T1\"}",
+            accept: 'application/graphql+json, application/json',
+            'accept-language': 'hu-HU,hu;q=0.9,en-US;q=0.8,en;q=0.7',
+            'content-type': 'application/json',
+            'sec-ch-ua': '"Chromium";v="110", "Not A(Brand";v="24", "Google Chrome";v="110"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-site',
+            'x-amzn-sessionid': amazonSessionId,
+            'x-imdb-client-name': 'imdb-web-next',
+            'x-imdb-client-rid': clientRid,
+            'x-imdb-user-country': 'HU',
+            'x-imdb-user-language': 'hu-HU',
+            'x-imdb-weblab-treatment-overrides': '{"IMDB_DESKTOP_SEARCH_ALGORITHM_UPDATES_577300":"T1"}',
             cookie,
-            "Referer": "https://www.imdb.com/",
-            "Referrer-Policy": "strict-origin-when-cross-origin"
+            Referer: 'https://www.imdb.com/',
+            'Referrer-Policy': 'strict-origin-when-cross-origin'
         },
-        referrer: "https://www.imdb.com/",
-        referrerPolicy: "strict-origin-when-cross-origin",
+        referrer: 'https://www.imdb.com/',
+        referrerPolicy: 'strict-origin-when-cross-origin',
         body: JSON.stringify(body),
-        method: "POST",
-        mode: "cors",
-        credentials: "include"
+        method: 'POST',
+        mode: 'cors',
+        credentials: 'include'
     });
 
     const jsonResp = await resp.json();
