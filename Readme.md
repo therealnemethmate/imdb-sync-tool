@@ -7,6 +7,7 @@ To use this application, you will need the following:
 - Node.js installed on your computer. You can download it from the official Node.js website: https://nodejs.org/.
 - An IMDb account.
 - A JSON file containing movie ratings in the following format:
+
 ```json
 {
   "imdbMovieId": "tt1001526",
@@ -21,14 +22,12 @@ To get started, follow these steps:
 
 2. Install the required dependencies by running the following command:
 
-    $ npm install
+  $ npm install
 
-3. Create a .env file in the root directory of the project and add the following environment variables:
+3. Create a .env file in the root directory of the project (based on `.env.example`) and add the following environment variables:
 
 ```conf
 IMDB_COOKIE=<copy from browser>
-IMDB_X_AMAZON_SESSIONID=<copy from browser>
-IMDB_X_IMDB_CLIENT_RID=<copy from browser>
 ```
 4. You can get these values by inspecting the cookies in your browser while logged in to your IMDb account.
 
@@ -36,7 +35,7 @@ IMDB_X_IMDB_CLIENT_RID=<copy from browser>
 
 6. Run the application by running the following command:
 
-    $ npm start
+  $ npm start
 
 
 The application will read the `ratings.json` file and synchronize the ratings to your IMDb account.

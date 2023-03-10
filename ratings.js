@@ -11,16 +11,12 @@ const sleepMs = Number.parseInt(env.IMDB_ST_SLEEP_MS) ?? 2000;
 
 const url = env.IMDB_GQL_API;
 const cookie = env.IMDB_COOKIE;
-const amazonSessionId = env.IMDB_X_AMAZON_SESSIONID;
-const clientRid = env.IMDB_X_IMDB_CLIENT_RID;
 
 export async function sync() {
     let count = 0;
     const ratings = await safeLoadJSON(ratingsPath);
-    const state = await safeLoadJSON(statePath) || {
-        ratings: { idsDone: [] },
-    };
-
+    let state = await safeLoadJSON(statePath);
+    if (!state?.ratings?.idsDone) state = { ratings: { idsDone: [] } };
     try {
         for (const rating of ratings) {
             if(state.ratings?.idsDone?.includes(rating.imdbMovieId)) {
@@ -34,7 +30,7 @@ export async function sync() {
             await sleep(sleepMs);
         }
     } catch (error) {
-        logger.error('Error while syncing ratings', JSON.stringify(error));
+        logger.error('Error while syncing ratings', error);
         await writeJSON(state, statePath);
     }
 
@@ -64,20 +60,10 @@ async function rate(titleId, rating) {
     const resp = await fetch(url, {
         headers: {
             accept: 'application/graphql+json, application/json',
-            'accept-language': 'hu-HU,hu;q=0.9,en-US;q=0.8,en;q=0.7',
             'content-type': 'application/json',
-            'sec-ch-ua': '"Chromium";v="110", "Not A(Brand";v="24", "Google Chrome";v="110"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"Windows"',
             'sec-fetch-dest': 'empty',
             'sec-fetch-mode': 'cors',
             'sec-fetch-site': 'same-site',
-            'x-amzn-sessionid': amazonSessionId,
-            'x-imdb-client-name': 'imdb-web-next',
-            'x-imdb-client-rid': clientRid,
-            'x-imdb-user-country': 'HU',
-            'x-imdb-user-language': 'hu-HU',
-            'x-imdb-weblab-treatment-overrides': '{"IMDB_DESKTOP_SEARCH_ALGORITHM_UPDATES_577300":"T1"}',
             cookie,
             Referer: 'https://www.imdb.com/',
             'Referrer-Policy': 'strict-origin-when-cross-origin'

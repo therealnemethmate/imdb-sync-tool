@@ -10,7 +10,7 @@ export async function safeLoadJSON(path) {
         const content = await fs.readFile(new URL(path, import.meta.url));
         return JSON.parse(content);
     } catch (err) {
-        console.error(`Failed to read json at path ${path}`, err)
+        console.error(`Failed to read json at path ${path}`, err);
         return {};
     }
 }
@@ -36,4 +36,4 @@ export async function writeJSON(content, path) {
 export const logger = {
     info: (...args) => console.log(`INFO ${new Date().toISOString()}`, ...args),
     error: (...args) => console.error(`ERROR ${new Date().toISOString()}`, ...args),
-}
+};
